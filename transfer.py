@@ -28,14 +28,20 @@ def write_to_s3(fname, directory=None):
     if directory:
         f = directory + fname
 
-    file_object = b.new_key(f)
-    file_object.set_contents_from_filename(fname)
+    file_object = b.new_key(fname)
+    file_object.set_contents_from_filename(f)
 
     print '{} written to {}!'.format(fname, b.name)
 
 
+def write_all(ext, directory):
+    files = [x for x in os.listdir(directory) if x.endswith(ext)]
+    for f in files:
+        write_to_s3(f, directory)
+
+
 def main():
-    write_to_s3('out.png', directory='../neural_artistic_style')
+    write_all('.png', 'neural_artistic_style/')
 
 
 if __name__ == '__main__':
