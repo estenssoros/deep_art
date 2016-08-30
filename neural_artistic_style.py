@@ -8,8 +8,8 @@ import deeppy as dp
 from multiprocessing import Pool, cpu_count
 from matconvnet import vgg_net
 from style_network import StyleNetwork
-from transfer import upload, download
-
+from transfer import upload, download, clear_images
+import progressbar
 
 def weight_tuple(s):
     try:
@@ -94,19 +94,17 @@ def style_transfer(subject, style, output, iterations):
     params = net.params
     learn_rule = dp.Adam(learn_rate=learn_rate)
     learn_rule_states = [learn_rule.init_state(p) for p in params]
-    for i in range(iterations):
+    bar = progressbar.ProgressBar()
+    for i in bar(range(iterations)):
         imsave(os.path.join(animation, '%.4d.png' % i), net_img())
         cost = np.mean(net.update())
         for param, state in zip(params, learn_rule_states):
             learn_rule.step(param, state)
-        print('Iteration: {0}/{1}, cost: {2.4f}'.format(i, iterations, cost))
+        # print('Iteration: {0}/{1}, cost: {2:.4f}'.format(i, iterations, cost))
     imsave(output, net_img())
 
-def clear_images(directory):
-    for f in os.listdir(directory):
-        os.remove(os.path.join(directory,f))
 
 if __name__ == "__main__":
-    clear_images()
-    style_transfer('images/finn.jpg', 'images/dem_bells.jpg', 'finn_bells.png', 200)
-    upload('.png', 'neural_artistic_style/animation/')
+    clear_images('animation')
+    style_transfer('images/finn.jpg', 'images/ramen.jpg', 'finn_ramen.png', 200)
+    upload('.png', 'animation/')
