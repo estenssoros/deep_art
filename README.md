@@ -40,7 +40,7 @@ alias nouveau off
 alias lbm-nouveau off
 ```
 ```
-$   sudo echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf
+$       sudo echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf
 $ sudo update-initramfs -u
 $ sudo reboot
 ```

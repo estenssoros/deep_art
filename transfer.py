@@ -28,21 +28,39 @@ def write_to_s3(fname, directory=None):
     if directory:
         f = directory + fname
 
-    file_object = b.new_key(fname)
+    file_object = b.new_key(f)
     file_object.set_contents_from_filename(f)
 
     print '{} written to {}!'.format(fname, b.name)
 
 
-def write_all(ext, directory):
+def upload(ext, directory):
     files = [x for x in os.listdir(directory) if x.endswith(ext)]
+    b = connect_s3('sebsimages')
+
     for f in files:
-        write_to_s3(f, directory)
+        file_object = b.new_key(f)
+        file_object.set_contents_from_filename(f)
+        print '{} written to {}!'.format(fname, b.name)
 
 
-def main():
-    write_all('.png', 'neural_artistic_style/')
+def download(ext, directory):
+    b = connect_s3('sebsimages')
+    files = [x for x in b.list(directory) if x.name.endswith(ext)]
+    for f in files:
+        f.get_contents_to_filename(f.name)
 
+def clear_images(directory):
+    for f in os.listdir(directory):
+        os.remove(os.path.join(directory,f))
+    print 'purged from local!'
 
+    b = connect_s3('sebsimages')
+
+    files = [f for f in b.list('neural_artistic_style/animation/') if f.name.endswith('.png')]
+    for f in files:
+        f.delete()
+    print 'purged from ec2!'
 if __name__ == '__main__':
-    main()
+    # download_all('.png','neural_artistic_style/animation/')
+    clear_images('animation')
