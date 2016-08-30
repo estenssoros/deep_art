@@ -9,7 +9,8 @@ attempts at style transfer using GPU optimized EC2 with the following:
 
 ## Install build essential
 ```
-$ sudo apt-get update && apt-get install build-essential
+$ sudo apt-get update
+$ sudo apt-get install build-essential
 $ sudo apt-get install gcc make
 $ sudo apt-get install linux-image-extra-virtual
 $ sudo apt-get install xorg
@@ -32,14 +33,14 @@ $ ./cuda_7.5.18_linux.run -extract=`pwd`/nvidia_installers
 ## Do some stuff to fix installer:
 ```
 $ sudo nano /etc/modprobe.d/blacklist-nouveau.conf
-1 blacklist nouveau
-2 blacklist lbm-nouveau
-3 options nouveau modeset=0
-4 alias nouveau off
-5 alias lbm-nouveau off
+blacklist nouveau
+blacklist lbm-nouveau
+options nouveau modeset=0
+alias nouveau off
+alias lbm-nouveau off
 ```
 ```
-$sudo echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf
+$   sudo echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf
 $ sudo update-initramfs -u
 $ sudo reboot
 ```
