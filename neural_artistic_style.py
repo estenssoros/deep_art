@@ -102,7 +102,6 @@ def style_transfer(subject, style, output, iterations):
         cost = np.mean(net.update())
         for param, state in zip(params, learn_rule_states):
             learn_rule.step(param, state)
-        # print('Iteration: {0}/{1}, cost: {2:.4f}'.format(i, iterations, cost))
     imsave(output, net_img())
 
 
