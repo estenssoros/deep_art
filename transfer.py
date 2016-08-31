@@ -45,7 +45,6 @@ def upload(ext, directory):
 
 
 def download(ext, directory):
-    clear_images(directory)
     b = connect_s3('sebsimages')
     files = [x for x in b.list(directory) if x.name.endswith(ext)]
     bar = progressbar.ProgressBar()

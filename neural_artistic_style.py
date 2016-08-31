@@ -11,6 +11,7 @@ from style_network import StyleNetwork
 from transfer import upload, download, clear_images
 import progressbar
 
+
 def weight_tuple(s):
     try:
         conv_idx, weight = map(float, s.split(','))
@@ -95,6 +96,7 @@ def style_transfer(subject, style, output, iterations):
     learn_rule = dp.Adam(learn_rate=learn_rate)
     learn_rule_states = [learn_rule.init_state(p) for p in params]
     bar = progressbar.ProgressBar()
+    print 'working on {0} -> {1}'.format(style, subject)
     for i in bar(range(iterations)):
         imsave(os.path.join(animation, '%.4d.png' % i), net_img())
         cost = np.mean(net.update())
@@ -106,5 +108,5 @@ def style_transfer(subject, style, output, iterations):
 
 if __name__ == "__main__":
     clear_images('animation')
-    style_transfer('images/finn.jpg', 'images/ramen.jpg', 'finn_ramen.png', 200)
+    style_transfer('images/finn.jpg', 'images/tiger.jpg', 'finn_tiger.png', 200)
     upload('.png', 'animation/')
