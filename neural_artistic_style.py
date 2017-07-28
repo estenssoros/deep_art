@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 
-import os
 import argparse
-import numpy as np
-import scipy.misc
-import deeppy as dp
+import os
 from multiprocessing import Pool, cpu_count
+
+import numpy as np
+import progressbar
+import scipy.misc
+from tqdm import tqdm
+
+import deeppy as dp
 from matconvnet import vgg_net
 from style_network import StyleNetwork
-from transfer import upload, download, clear_images
-import progressbar
+from transfer import clear_images, download, upload
 
 
 def weight_tuple(s):
@@ -95,13 +98,13 @@ def style_transfer(subject, style, output, iterations):
     params = net.params
     learn_rule = dp.Adam(learn_rate=learn_rate)
     learn_rule_states = [learn_rule.init_state(p) for p in params]
-    bar = progressbar.ProgressBar()
     print 'working on {0} -> {1}'.format(style, subject)
-    for i in bar(range(iterations)):
+    for i in tqdm(range(iterations)):
         imsave(os.path.join(animation, '%.4d.png' % i), net_img())
         cost = np.mean(net.update())
         for param, state in zip(params, learn_rule_states):
             learn_rule.step(param, state)
+        # print('Iteration: {0}/{1}, cost: {2:.4f}'.format(i, iterations, cost))
     imsave(output, net_img())
 
 

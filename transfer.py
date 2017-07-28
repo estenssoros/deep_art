@@ -1,6 +1,6 @@
 import os
 import boto
-import progressbar
+from tqdm import tqdm
 
 def aws_keys():
     env = os.environ
@@ -37,8 +37,7 @@ def write_to_s3(fname, directory=None):
 def upload(ext, directory):
     files = [x for x in os.listdir(directory) if x.endswith(ext)]
     b = connect_s3('sebsimages')
-    bar = progressbar.ProgressBar()
-    for f in bar(files):
+    for f in tqdm(files):
         fname = os.path.join(directory,f)
         file_object = b.new_key(fname)
         file_object.set_contents_from_filename(fname)
@@ -47,8 +46,7 @@ def upload(ext, directory):
 def download(ext, directory):
     b = connect_s3('sebsimages')
     files = [x for x in b.list(directory) if x.name.endswith(ext)]
-    bar = progressbar.ProgressBar()
-    for f in bar(files):
+    for f in tqdm(files):
         f.get_contents_to_filename(f.name)
 
 def clear_images(directory):
@@ -59,8 +57,7 @@ def clear_images(directory):
     b = connect_s3('sebsimages')
 
     files = [f for f in b.list(directory) if f.name.endswith('.png')]
-    bar = progressbar.ProgressBar()
-    for f in bar(files):
+    for f in tqdm(files):
         f.delete()
     print 'purged from ec2!'
 

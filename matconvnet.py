@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.io
+
 import deeppy as dp
 
 
@@ -24,7 +25,7 @@ def pool_layer(pool_method, border_mode):
 
 def vgg_net(path, pool_method='max', border_mode='same'):
     matconvnet = scipy.io.loadmat(path)
-    img_mean = matconvnet['meta'][0][0][1][0][0][0][0][0]
+    img_mean = matconvnet['meta'][0][0][2][0][0][2]
     vgg_layers = matconvnet['layers'][0]
     layers = []
     for layer in vgg_layers:
